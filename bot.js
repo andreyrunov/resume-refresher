@@ -77,7 +77,35 @@ function sendToBot() {
 	const checkYear = new Date().getFullYear()
 	const checkHour = new Date().getHours()
 	const checkMinutes = new Date().getMinutes()
-	if (checkHour === 1 && checkMinutes === 43 && getCtx) {
+	if (checkHour === 8 && checkMinutes === 45 && getCtx) {
+		refreshResume()
+		const messageToBot = `Резюме обновлено ${checkDate}.${checkMonth}.${checkYear} 
+в ${checkHour}:${checkMinutes}`
+		console.log(messageToBot)
+		axios.post(
+			`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
+			{
+				chat_id: getCtx,
+				text: messageToBot,
+			}
+		)
+	}
+	
+	if (checkHour === 12 && checkMinutes === 55 && getCtx) {
+		refreshResume()
+		const messageToBot = `Резюме обновлено ${checkDate}.${checkMonth}.${checkYear} 
+в ${checkHour}:${checkMinutes}`
+		console.log(messageToBot)
+		axios.post(
+			`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
+			{
+				chat_id: getCtx,
+				text: messageToBot,
+			}
+		)
+	}
+
+	if (checkHour === 16 && checkMinutes === 59 && getCtx) {
 		refreshResume()
 		const messageToBot = `Резюме обновлено ${checkDate}.${checkMonth}.${checkYear} 
 в ${checkHour}:${checkMinutes}`

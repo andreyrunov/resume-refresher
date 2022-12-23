@@ -61,7 +61,7 @@ let getCtx
 
 bot.start((ctx) => {
 	ctx.reply(
-		'Добро пожаловать! Тут будем обновлять Ваше резюме и присылать уведомления об успешном обновлении.'
+		'Добро пожаловать! Тут будем обновлять Ваше резюме и присылать уведомления об успешном обновлении. Бот работает в тестовом режиме.'
 	)
 })
 
@@ -71,31 +71,52 @@ bot.hears('Начать', (ctx) => {
 	getCtx = ctx.message.chat.id
 })
 
+let currentDay = 1
+let minutes1 = 7
+let minutes2 = 22
+let minutes3 = 48
+
+function setRandomMinutes() {
+	let min = 10
+	let max = 18
+	let rand = Math.floor(min + Math.random() * (max + 1 - min))
+	minutes1 = rand
+	minutes2 = minutes1 + 18
+	minutes3 = minutes2 + 18
+	axios.post(
+		`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
+		{
+			chat_id: getCtx,
+			text: `Резюме будет обновляться сегодня в 10:${minutes1}, в 14:${minutes2} и в 18:${minutes3},`,
+		}
+	)
+}
+
 function sendToBot() {
+	const checkDay = new Date().getDay()
 	const checkDate = new Date().getDate()
 	const checkMonth = new Date().getMonth() + 1
 	const checkYear = new Date().getFullYear()
 	const checkHour = new Date().getHours()
 	const checkMinutes = new Date().getMinutes()
-	if (checkHour === 8 && checkMinutes === 45 && getCtx) {
-		refreshResume()
-		const messageToBot = `Резюме обновлено ${checkDate}.${checkMonth}.${checkYear} 
-в ${checkHour}:${checkMinutes}`
-		console.log(messageToBot)
-		axios.post(
-			`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
-			{
-				chat_id: getCtx,
-				text: messageToBot,
-			}
-		)
+
+	if (currentDay !== checkDate) {
+		currentDay = checkDate
+		setRandomMinutes()
 	}
-	
-	if (checkHour === 12 && checkMinutes === 55 && getCtx) {
-		refreshResume()
-		const messageToBot = `Резюме обновлено ${checkDate}.${checkMonth}.${checkYear} 
-в ${checkHour}:${checkMinutes}`
-		console.log(messageToBot)
+
+	if (
+		checkHour === 10 &&
+		checkMinutes === minutes1 &&
+		getCtx &&
+		checkDay !== 0 &&
+		checkDay !== 6
+	) {
+		// refreshResume()
+		const messageToBot = `Резюме обновлено:
+${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
+		
+Следующее обновление в 14:${minutes2}`
 		axios.post(
 			`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
 			{
@@ -105,11 +126,39 @@ function sendToBot() {
 		)
 	}
 
-	if (checkHour === 16 && checkMinutes === 59 && getCtx) {
-		refreshResume()
-		const messageToBot = `Резюме обновлено ${checkDate}.${checkMonth}.${checkYear} 
-в ${checkHour}:${checkMinutes}`
-		console.log(messageToBot)
+	if (
+		checkHour === 14 &&
+		checkMinutes === minutes2 &&
+		getCtx &&
+		checkDay !== 0 &&
+		checkDay !== 6
+	) {
+		// refreshResume()
+		const messageToBot = `Резюме обновлено:
+${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
+		
+Следующее обновление в 18:${minutes3}`
+		axios.post(
+			`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
+			{
+				chat_id: getCtx,
+				text: messageToBot,
+			}
+		)
+	}
+
+	if (
+		checkHour === 18 &&
+		checkMinutes === minutes3 &&
+		getCtx &&
+		checkDay !== 0 &&
+		checkDay !== 6
+	) {
+		// refreshResume()
+		const messageToBot = `Резюме обновлено:
+${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
+		
+Следующее обновление завтра утром`
 		axios.post(
 			`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
 			{

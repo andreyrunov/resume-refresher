@@ -112,7 +112,7 @@ function sendToBot() {
 		checkDay !== 0 &&
 		checkDay !== 6
 	) {
-		// refreshResume()
+		refreshResume()
 		const messageToBot = `Резюме обновлено:
 ${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
 		
@@ -133,7 +133,7 @@ ${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
 		checkDay !== 0 &&
 		checkDay !== 6
 	) {
-		// refreshResume()
+		refreshResume()
 		const messageToBot = `Резюме обновлено:
 ${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
 		
@@ -154,7 +154,7 @@ ${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
 		checkDay !== 0 &&
 		checkDay !== 6
 	) {
-		// refreshResume()
+		refreshResume()
 		const messageToBot = `Резюме обновлено:
 ${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
 		

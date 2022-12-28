@@ -7,7 +7,7 @@ async function refreshResume() {
 	try {
 		// открываем браузер
 		const browser = await puppeteer.launch({
-			// headless: false,
+			headless: false,
 			args: ['--no-sandbox', '--disable-setuid-sandbox'],
 		})
 
@@ -18,35 +18,60 @@ async function refreshResume() {
 		await page.goto(`https://hh.ru/account/login`)
 
 		// делаем скриншот страницы для проверки правильности отработки программы
-		// await page.screenshot({ path: 'startPage.png' })
+		await page.screenshot({ path: 'startPage.png' })
 
-		await page.click('.account-login-actions > button:nth-child(2)')
+		await page.click(
+			'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div > div > div > div:nth-child(1) > div.account-login-tile-content-wrapper > div.account-login-tile-content > div > div:nth-child(2) > div > form > div.account-login-actions > button.bloko-link.bloko-link_pseudo'
+		)
 
-		// await page.screenshot({ path: 'loginPage.png' })
+		await page.screenshot({ path: 'loginPage.png' })
 
 		await page.type(
-			'div.bloko-form-item:nth-child(8) > fieldset:nth-child(1) > input:nth-child(1)',
+			'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div > div > div > div:nth-child(1) > div.account-login-tile-content-wrapper > div.account-login-tile-content > div > div:nth-child(2) > form > div:nth-child(8) > fieldset > input',
 			process.env.LOGIN
 		)
 
 		await page.type(
-			'div.bloko-form-item:nth-child(9) > fieldset:nth-child(1) > input:nth-child(1)',
+			'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div > div > div > div:nth-child(1) > div.account-login-tile-content-wrapper > div.account-login-tile-content > div > div:nth-child(2) > form > div:nth-child(9) > fieldset > input',
 			process.env.PASS
 		)
-		// await page.screenshot({ path: 'typeUserAndPass.png' })
+		await page.screenshot({ path: 'typeUserAndPass.png' })
 
-		await page.click('.account-login-actions > button:nth-child(1)')
-
+		await page.click(
+			'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div > div > div > div:nth-child(1) > div.account-login-tile-content-wrapper > div.account-login-tile-content > div > div:nth-child(2) > form > div.bloko-form-row > div > button.bloko-button.bloko-button_kind-primary'
+		)
+		
 		setTimeout(async () => {
+			await page.setViewport({ width: 800, height: 1200 })
 			await page.goto(`https://hh.ru/applicant/resumes`)
+			await page.screenshot({ path: 'resumeList.png' })
 
-			// await page.screenshot({ path: 'resumeList.png' })
 
-			await page.click(
-				'div.bloko-gap:nth-child(2) > div:nth-child(1) > div:nth-child(7) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > span:nth-child(1) > button:nth-child(1)'
+			const checkUpSelector =
+				'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-actions-wrapper > div > div > div:nth-child(1) > span > button'
+				'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-actions-wrapper > div > div > div:nth-child(1) > span > button'
+				'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-actions-wrapper > div > div > div:nth-child(1) > span > button'
+				// '#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-actions-wrapper > div > div > div:nth-child(1) > span > button'
+			await page.waitForSelector(checkUpSelector)
+			await page.click(checkUpSelector)
+
+			await page.screenshot({ path: 'final.png' })
+
+			const approveSelector =
+				'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-update > div'
+			await page.waitForSelector(approveSelector)
+			const approveText = await page.$eval(
+				approveSelector,
+				(el) => el.innerText
 			)
 
-			// await page.screenshot({ path: 'final.png' })
+			axios.post(
+				`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
+				{
+					chat_id: getCtx,
+					text: approveText,
+				}
+			)
 
 			await browser.close()
 		}, '15000')
@@ -71,10 +96,18 @@ bot.hears('Начать', (ctx) => {
 	getCtx = ctx.message.chat.id
 })
 
-let currentDay = 1
+let currentDay = null
 let minutes1 = 7
 let minutes2 = 22
 let minutes3 = 48
+
+bot.hears('Проверка', async (ctx) => {
+	await ctx.reply(`Сейчас данные приходят для чата: ${getCtx}`)
+	await ctx.reply(`Текущий день: ${currentDay}`)
+	await ctx.reply(`Минуты утро: ${minutes1}`)
+	await ctx.reply(`Минуты день: ${minutes2}`)
+	await ctx.reply(`Минуты вечер: ${minutes3}`)
+})
 
 function setRandomMinutes() {
 	let min = 10
@@ -113,7 +146,7 @@ function sendToBot() {
 		checkDay !== 6
 	) {
 		refreshResume()
-		const messageToBot = `Резюме обновлено:
+		const messageToBot = `Обновление запущено:
 ${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
 		
 Следующее обновление в 14:${minutes2}`
@@ -128,13 +161,13 @@ ${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
 
 	if (
 		checkHour === 14 &&
-		checkMinutes === minutes2 &&
+		checkMinutes === 33 &&
 		getCtx &&
 		checkDay !== 0 &&
 		checkDay !== 6
 	) {
 		refreshResume()
-		const messageToBot = `Резюме обновлено:
+		const messageToBot = `Обновление запущено:
 ${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
 		
 Следующее обновление в 18:${minutes3}`
@@ -155,7 +188,7 @@ ${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
 		checkDay !== 6
 	) {
 		refreshResume()
-		const messageToBot = `Резюме обновлено:
+		const messageToBot = `Обновление запущено:
 ${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
 		
 Следующее обновление завтра утром`

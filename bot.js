@@ -7,7 +7,7 @@ async function refreshResume() {
 	try {
 		// открываем браузер
 		const browser = await puppeteer.launch({
-			headless: false,
+			// headless: false,
 			args: ['--no-sandbox', '--disable-setuid-sandbox'],
 		})
 
@@ -18,13 +18,13 @@ async function refreshResume() {
 		await page.goto(`https://hh.ru/account/login`)
 
 		// делаем скриншот страницы для проверки правильности отработки программы
-		await page.screenshot({ path: 'startPage.png' })
+		// await page.screenshot({ path: 'startPage.png' })
 
 		await page.click(
 			'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div > div > div > div:nth-child(1) > div.account-login-tile-content-wrapper > div.account-login-tile-content > div > div:nth-child(2) > div > form > div.account-login-actions > button.bloko-link.bloko-link_pseudo'
 		)
 
-		await page.screenshot({ path: 'loginPage.png' })
+		// await page.screenshot({ path: 'loginPage.png' })
 
 		await page.type(
 			'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div > div > div > div:nth-child(1) > div.account-login-tile-content-wrapper > div.account-login-tile-content > div > div:nth-child(2) > form > div:nth-child(8) > fieldset > input',
@@ -35,27 +35,25 @@ async function refreshResume() {
 			'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div > div > div > div:nth-child(1) > div.account-login-tile-content-wrapper > div.account-login-tile-content > div > div:nth-child(2) > form > div:nth-child(9) > fieldset > input',
 			process.env.PASS
 		)
-		await page.screenshot({ path: 'typeUserAndPass.png' })
+		
+		// await page.screenshot({ path: 'typeUserAndPass.png' })
 
 		await page.click(
 			'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div > div > div > div:nth-child(1) > div.account-login-tile-content-wrapper > div.account-login-tile-content > div > div:nth-child(2) > form > div.bloko-form-row > div > button.bloko-button.bloko-button_kind-primary'
 		)
-		
+
 		setTimeout(async () => {
 			await page.setViewport({ width: 800, height: 1200 })
 			await page.goto(`https://hh.ru/applicant/resumes`)
-			await page.screenshot({ path: 'resumeList.png' })
-
+			// await page.screenshot({ path: 'resumeList.png' })
 
 			const checkUpSelector =
-				'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-actions-wrapper > div > div > div:nth-child(1) > span > button'
-				'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-actions-wrapper > div > div > div:nth-child(1) > span > button'
-				'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-actions-wrapper > div > div > div:nth-child(1) > span > button'
-				// '#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-actions-wrapper > div > div > div:nth-child(1) > span > button'
+				'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-actions-wrapper > div > div > div:nth-child(1) > span > button.bloko-link'
+
 			await page.waitForSelector(checkUpSelector)
 			await page.click(checkUpSelector)
 
-			await page.screenshot({ path: 'final.png' })
+			// await page.screenshot({ path: 'final.png' })
 
 			const approveSelector =
 				'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-update > div'
@@ -161,7 +159,7 @@ ${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
 
 	if (
 		checkHour === 14 &&
-		checkMinutes === 33 &&
+		checkMinutes === minutes2 &&
 		getCtx &&
 		checkDay !== 0 &&
 		checkDay !== 6

@@ -35,7 +35,7 @@ async function refreshResume() {
 			'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div > div > div > div:nth-child(1) > div.account-login-tile-content-wrapper > div.account-login-tile-content > div > div:nth-child(2) > form > div:nth-child(9) > fieldset > input',
 			process.env.PASS
 		)
-		
+
 		// await page.screenshot({ path: 'typeUserAndPass.png' })
 
 		await page.click(
@@ -105,10 +105,6 @@ bot.hears('Проверка', async (ctx) => {
 	await ctx.reply(`Минуты утро: ${minutes1}`)
 	await ctx.reply(`Минуты день: ${minutes2}`)
 	await ctx.reply(`Минуты вечер: ${minutes3}`)
-})
-
-bot.hears('Обновить', () => {
-	refreshResume()
 })
 
 function setRandomMinutes() {

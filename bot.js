@@ -107,6 +107,10 @@ bot.hears('Проверка', async (ctx) => {
 	await ctx.reply(`Минуты вечер: ${minutes3}`)
 })
 
+bot.hears('Обновить', () => {
+	refreshResume()
+})
+
 function setRandomMinutes() {
 	let min = 10
 	let max = 18

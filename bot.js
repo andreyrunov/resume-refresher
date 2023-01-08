@@ -7,7 +7,7 @@ async function refreshResume() {
 	try {
 		// открываем браузер
 		const browser = await puppeteer.launch({
-			// headless: false,
+			headless: false,
 			args: ['--no-sandbox', '--disable-setuid-sandbox'],
 		})
 
@@ -55,21 +55,21 @@ async function refreshResume() {
 
 			// await page.screenshot({ path: 'final.png' })
 
-			const approveSelector =
-				'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-update > div'
-			await page.waitForSelector(approveSelector)
-			const approveText = await page.$eval(
-				approveSelector,
-				(el) => el.innerText
-			)
+			// const approveSelector =
+			// 	'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-update > div'
+			// await page.waitForSelector(approveSelector)
+			// const approveText = await page.$eval(
+			// 	approveSelector,
+			// 	(el) => el.innerText
+			// )
 
-			axios.post(
-				`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
-				{
-					chat_id: getCtx,
-					text: approveText,
-				}
-			)
+			// axios.post(
+			// 	`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
+			// 	{
+			// 		chat_id: getCtx,
+			// 		text: approveText,
+			// 	}
+			// )
 
 			await browser.close()
 		}, '15000')

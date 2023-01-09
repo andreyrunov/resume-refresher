@@ -16,6 +16,13 @@ async function refreshResume() {
 
 		// переходим по url адресу
 		await page.goto(`https://hh.ru/account/login`)
+		await axios.post(
+			`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
+			{
+				chat_id: getCtx,
+				text: `Перешли по адресу https://hh.ru/account/login`,
+			}
+		)
 
 		// делаем скриншот страницы для проверки правильности отработки программы
 		// await page.screenshot({ path: 'startPage.png' })
@@ -37,21 +44,50 @@ async function refreshResume() {
 		)
 
 		// await page.screenshot({ path: 'typeUserAndPass.png' })
+		await axios.post(
+			`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
+			{
+				chat_id: getCtx,
+				text: `Ввели логин и пароль`,
+			}
+		)
 
 		await page.click(
 			'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div > div > div > div:nth-child(1) > div.account-login-tile-content-wrapper > div.account-login-tile-content > div > div:nth-child(2) > form > div.bloko-form-row > div > button.bloko-button.bloko-button_kind-primary'
+		)
+
+		await axios.post(
+			`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
+			{
+				chat_id: getCtx,
+				text: `Авторизовались на сайте`,
+			}
 		)
 
 		setTimeout(async () => {
 			await page.setViewport({ width: 800, height: 1200 })
 			await page.goto(`https://hh.ru/applicant/resumes`)
 			// await page.screenshot({ path: 'resumeList.png' })
+			await axios.post(
+				`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
+				{
+					chat_id: getCtx,
+					text: `Перешли к списку резюме`,
+				}
+			)
 
 			const checkUpSelector =
 				'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-actions-wrapper > div > div > div:nth-child(1) > span > button.bloko-link'
 
 			await page.waitForSelector(checkUpSelector)
 			await page.click(checkUpSelector)
+			await axios.post(
+				`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
+				{
+					chat_id: getCtx,
+					text: `Обновили резюме`,
+				}
+			)
 
 			// await page.screenshot({ path: 'final.png' })
 
@@ -179,8 +215,8 @@ ${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
 	}
 
 	if (
-		checkHour === 18 &&
-		checkMinutes === minutes3 &&
+		checkHour === 21 &&
+		checkMinutes === 36 &&
 		getCtx &&
 		checkDay !== 0 &&
 		checkDay !== 6

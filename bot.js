@@ -215,8 +215,8 @@ ${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
 	}
 
 	if (
-		checkHour === 21 &&
-		checkMinutes === 36 &&
+		checkHour === 18 &&
+		checkMinutes === minutes3 &&
 		getCtx &&
 		checkDay !== 0 &&
 		checkDay !== 6

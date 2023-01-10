@@ -67,7 +67,9 @@ async function refreshResume() {
 
 		setTimeout(async () => {
 			await page.setViewport({ width: 800, height: 1200 })
-			await page.goto(`https://hh.ru/applicant/resumes`)
+			await page.goto(`https://hh.ru/applicant/resumes`, {
+                waitUntil: 'domcontentloaded'
+            })
 			
 			await page.screenshot({ path: 'resumeList.png' })
 
@@ -78,12 +80,12 @@ async function refreshResume() {
 					text: `Перешли к списку резюме`,
 				}
 			)
-
-			const checkUpSelector =
-				'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-actions-wrapper > div > div > div:nth-child(1) > span > button.bloko-link'
-
-			await page.waitForSelector(checkUpSelector)
-			await page.click(checkUpSelector)
+            
+            // await page.evaluate(() => {
+            //   location.reload(true)
+            // })
+			// await page.waitForSelector('#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-actions-wrapper > div > div > div:nth-child(1)')
+			await page.click('#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-actions-wrapper > div > div > div:nth-child(1) > span > button')
 			await axios.post(
 				`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
 				{
@@ -181,7 +183,7 @@ function sendToBot() {
 
 		if (currentDay !== checkDate) {
 			currentDay = checkDate
-			setRandomMinutes()
+// 			setRandomMinutes()
 		}
 
 		if (

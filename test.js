@@ -161,7 +161,7 @@ bot.hears('Фото', async (ctx) => {
 
 let currentDay = null
 let minutes1 = 7
-let minutes2 = 34
+let minutes2 = 40
 let minutes3 = 48
 
 bot.hears('Проверка', async (ctx) => {

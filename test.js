@@ -25,13 +25,23 @@ async function refreshResume() {
 		)
 
 		// делаем скриншот страницы для проверки правильности отработки программы
-		// await page.screenshot({ path: 'startPage.png' })
+		await page.screenshot({ path: 'startPage.png' })
+		// await bot.sendPhoto({
+		// 	chat_id: getCtx,
+		// 	caption: 'Стартовая страница',
+		// 	photo: 'startPage.png', //replace your image url here
+		// })
 
 		await page.click(
 			'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div > div > div > div:nth-child(1) > div.account-login-tile-content-wrapper > div.account-login-tile-content > div > div:nth-child(2) > div > form > div.account-login-actions > button.bloko-link.bloko-link_pseudo'
 		)
 
-		// await page.screenshot({ path: 'loginPage.png' })
+		await page.screenshot({ path: 'loginPage.png' })
+		// await bot.sendPhoto({
+		// 	chat_id: getCtx,
+		// 	caption: 'Страница авторизации',
+		// 	photo: 'loginPage.png', //replace your image url here
+		// })
 
 		await page.type(
 			'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div > div > div > div:nth-child(1) > div.account-login-tile-content-wrapper > div.account-login-tile-content > div > div:nth-child(2) > form > div:nth-child(8) > fieldset > input',
@@ -43,7 +53,13 @@ async function refreshResume() {
 			process.env.PASS
 		)
 
-		// await page.screenshot({ path: 'typeUserAndPass.png' })
+		await page.screenshot({ path: 'typeUserAndPass.png' })
+		// await bot.sendPhoto({
+		// 	chat_id: getCtx,
+		// 	photo: 'typeUserAndPass.png', //replace your image url here
+		// 	caption: 'Ввели логин и пароль',
+		// })
+
 		await axios.post(
 			`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
 			{
@@ -67,7 +83,12 @@ async function refreshResume() {
 		setTimeout(async () => {
 			await page.setViewport({ width: 800, height: 1200 })
 			await page.goto(`https://hh.ru/applicant/resumes`)
-			// await page.screenshot({ path: 'resumeList.png' })
+			await page.screenshot({ path: 'resumeList.png' })
+			// await bot.sendPhoto({
+			// 	chat_id: getCtx,
+			// 	caption: 'Перешли к списку резюме',
+			// 	photo: 'resumeList.png', //replace your image url here
+			// })
 			await axios.post(
 				`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
 				{
@@ -76,18 +97,18 @@ async function refreshResume() {
 				}
 			)
 
-			const checkUpSelector =
-				'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-actions-wrapper > div > div > div:nth-child(1) > span > button.bloko-link'
+			// const checkUpSelector =
+			// 	'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-actions-wrapper > div > div > div:nth-child(1) > span > button.bloko-link'
 
-			await page.waitForSelector(checkUpSelector)
-			await page.click(checkUpSelector)
-			await axios.post(
-				`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
-				{
-					chat_id: getCtx,
-					text: `Обновили резюме`,
-				}
-			)
+			// await page.waitForSelector(checkUpSelector)
+			// await page.click(checkUpSelector)
+			// await axios.post(
+			// 	`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
+			// 	{
+			// 		chat_id: getCtx,
+			// 		text: `Обновили резюме`,
+			// 	}
+			// )
 
 			// await page.screenshot({ path: 'final.png' })
 
@@ -114,9 +135,33 @@ bot.hears('Начать', (ctx) => {
 	getCtx = ctx.message.chat.id
 })
 
+bot.hears('Фото', async (ctx) => {
+	try {
+		await ctx.replyWithPhoto(
+			{ source: 'startPage.png' },
+			{ caption: 'Стартовая страница' }
+		)
+		await ctx.replyWithPhoto({ source: 'loginPage.png' }, { caption: 'Логин' })
+		await ctx.replyWithPhoto(
+			{ source: 'typeUserAndPass.png' },
+			{ caption: 'Ввели логин и пароль' }
+		)
+		await ctx.replyWithPhoto(
+			{ source: 'resumeList.png' },
+			{ caption: 'Список резюме' }
+		)
+		await ctx.replyWithPhoto(
+			{ source: 'typeUserAndPass.png' },
+			{ caption: 'Логин и пароль' }
+		)
+	} catch (e) {
+		console.log(e)
+	}
+})
+
 let currentDay = null
 let minutes1 = 7
-let minutes2 = 22
+let minutes2 = 34
 let minutes3 = 48
 
 bot.hears('Проверка', async (ctx) => {
@@ -144,79 +189,83 @@ function setRandomMinutes() {
 }
 
 function sendToBot() {
-	const checkDay = new Date().getDay()
-	const checkDate = new Date().getDate()
-	const checkMonth = new Date().getMonth() + 1
-	const checkYear = new Date().getFullYear()
-	const checkHour = new Date().getHours()
-	const checkMinutes = new Date().getMinutes()
+	try {
+		const checkDay = new Date().getDay()
+		const checkDate = new Date().getDate()
+		const checkMonth = new Date().getMonth() + 1
+		const checkYear = new Date().getFullYear()
+		const checkHour = new Date().getHours()
+		const checkMinutes = new Date().getMinutes()
 
-	if (currentDay !== checkDate) {
-		currentDay = checkDate
-		setRandomMinutes()
-	}
+		if (currentDay !== checkDate) {
+			currentDay = checkDate
+			//setRandomMinutes()
+		}
 
-	if (
-		checkHour === 10 &&
-		checkMinutes === minutes1 &&
-		getCtx &&
-		checkDay !== 0 &&
-		checkDay !== 6
-	) {
-		refreshResume()
-		const messageToBot = `Обновление запущено:
+		if (
+			checkHour === 10 &&
+			checkMinutes === minutes1 &&
+			getCtx &&
+			checkDay !== 0 &&
+			checkDay !== 6
+		) {
+			refreshResume()
+			const messageToBot = `Обновление запущено:
 ${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
 		
 Следующее обновление в 14:${minutes2}`
-		axios.post(
-			`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
-			{
-				chat_id: getCtx,
-				text: messageToBot,
-			}
-		)
-	}
+			axios.post(
+				`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
+				{
+					chat_id: getCtx,
+					text: messageToBot,
+				}
+			)
+		}
 
-	if (
-		checkHour === 14 &&
-		checkMinutes === minutes2 &&
-		getCtx &&
-		checkDay !== 0 &&
-		checkDay !== 6
-	) {
-		refreshResume()
-		const messageToBot = `Обновление запущено:
+		if (
+			checkHour === 13 &&
+			checkMinutes === minutes2 &&
+			getCtx &&
+			checkDay !== 0 &&
+			checkDay !== 6
+		) {
+			refreshResume()
+			const messageToBot = `Обновление запущено:
 ${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
 		
 Следующее обновление в 18:${minutes3}`
-		axios.post(
-			`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
-			{
-				chat_id: getCtx,
-				text: messageToBot,
-			}
-		)
-	}
+			axios.post(
+				`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
+				{
+					chat_id: getCtx,
+					text: messageToBot,
+				}
+			)
+		}
 
-	if (
-		checkHour === 18 &&
-		checkMinutes === minutes3 &&
-		getCtx &&
-		checkDay !== 0 &&
-		checkDay !== 6
-	) {
-		refreshResume()
-		const messageToBot = `Обновление запущено:
+		if (
+			checkHour === 18 &&
+			checkMinutes === minutes3 &&
+			getCtx &&
+			checkDay !== 0 &&
+			checkDay !== 6
+		) {
+			refreshResume()
+			const messageToBot = `Обновление запущено:
 ${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
 		
 Следующее обновление завтра утром`
-		axios.post(
-			`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
-			{
-				chat_id: getCtx,
-				text: messageToBot,
-			}
-		)
+			axios.post(
+				`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
+				{
+					chat_id: getCtx,
+					text: messageToBot,
+				}
+			)
+		}
+	} catch (e) {
+		console.log(e)
 	}
 }
 

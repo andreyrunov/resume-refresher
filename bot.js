@@ -81,7 +81,9 @@ async function refreshResume() {
 
 			const checkUpSelector =
 				'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-actions-wrapper > div > div > div:nth-child(1) > span > button.bloko-link'
-
+				'/html/body/div[5]/div/div[3]/div[1]/div/div/div[1]/div[4]/div[1]/div/div[9]/div/div/div[1]/span/button'
+				''
+				''
 			await page.waitForSelector(checkUpSelector)
 			await page.click(checkUpSelector)
 			await axios.post(

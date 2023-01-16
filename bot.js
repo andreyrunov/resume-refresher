@@ -64,28 +64,44 @@ async function refreshResume() {
 				text: `Авторизовались на сайте`,
 			}
 		)
-
 		setTimeout(async () => {
 			await page.setViewport({ width: 800, height: 1200 })
-			await page.goto(`https://hh.ru/applicant/resumes`, {
-                waitUntil: 'domcontentloaded'
-            })
-			
-			await page.screenshot({ path: 'resumeList.png' })
+			await page.goto(
+				`https://hh.ru/resume/993aa7ffff0b03cdea0039ed1f33456c555172`,
+				{
+					waitUntil: 'domcontentloaded',
+				}
+			)
+
+			await page.screenshot({ path: 'resumePage.png' })
 
 			await axios.post(
 				`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
 				{
 					chat_id: getCtx,
-					text: `Перешли к списку резюме`,
+					text: `Перешли к резюме`,
 				}
 			)
-            
-            // await page.evaluate(() => {
-            //   location.reload(true)
-            // })
-			// await page.waitForSelector('#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-actions-wrapper > div > div > div:nth-child(1)')
-			await page.click('#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div > div.bloko-column.bloko-column_container.bloko-column_xs-4.bloko-column_m-8.bloko-column_l-11 > div:nth-child(4) > div:nth-child(1) > div > div.applicant-resumes-actions-wrapper > div > div > div:nth-child(1) > span > button')
+
+			// await page.evaluate(() => {
+			//   location.reload(true)
+			// })
+			await page.waitForSelector(
+				'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div:nth-child(2) > div > div > div.resume-wrapper > div:nth-child(2) > div > div.bloko-columns-row > div > div > div:nth-child(2) > div.bloko-gap.bloko-gap_top > div > button.bloko-button_kind-primary'
+			)
+
+			// var element = document.querySelector('body')
+			// console.log(element)
+			// const clickEvent = new MouseEvent('click', {
+			// 	view: window,
+			// 	bubbles: true,
+			// 	cancelable: false,
+			// })
+
+			// element.dispatchEvent(clickEvent)
+			await page.click(
+				'#HH-React-Root > div > div.HH-MainContent.HH-Supernova-MainContent > div.main-content > div > div:nth-child(2) > div > div > div.resume-wrapper > div:nth-child(2) > div > div.bloko-columns-row > div > div > div:nth-child(2) > div.bloko-gap.bloko-gap_top > div > button.bloko-button_kind-primary'
+			)
 			await axios.post(
 				`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
 				{
@@ -97,7 +113,7 @@ async function refreshResume() {
 			await page.screenshot({ path: 'final.png' })
 
 			await browser.close()
-		}, '15000')
+		}, 15000)
 	} catch (e) {
 		console.log(e)
 	}
@@ -131,8 +147,8 @@ bot.hears('Фото', async (ctx) => {
 			{ caption: 'Ввели логин и пароль' }
 		)
 		await ctx.replyWithPhoto(
-			{ source: 'resumeList.png' },
-			{ caption: 'Список резюме' }
+			{ source: 'resumePage.png' },
+			{ caption: 'Страница резюме' }
 		)
 		await ctx.replyWithPhoto(
 			{ source: 'final.png' },
@@ -145,7 +161,7 @@ bot.hears('Фото', async (ctx) => {
 
 let currentDay = null
 let minutes1 = 7
-let minutes2 = 22
+let minutes2 = 29
 let minutes3 = 48
 
 bot.hears('Проверка', async (ctx) => {
@@ -183,7 +199,7 @@ function sendToBot() {
 
 		if (currentDay !== checkDate) {
 			currentDay = checkDate
-// 			setRandomMinutes()
+			// 			setRandomMinutes()
 		}
 
 		if (
@@ -208,7 +224,7 @@ ${checkDate}.${checkMonth}.${checkYear} в ${checkHour}:${checkMinutes}
 		}
 
 		if (
-			checkHour === 14 &&
+			checkHour === 16 &&
 			checkMinutes === minutes2 &&
 			getCtx &&
 			checkDay !== 0 &&
